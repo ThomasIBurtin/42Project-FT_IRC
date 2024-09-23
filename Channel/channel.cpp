@@ -69,7 +69,7 @@ void Channel::setTopic(std::string topic)
     this->_topic = topic;
 }
 
-void Channel::setMode(char signe, char mode, std::string optionnel = "")
+void Channel::setMode(char signe, char mode, std::string optionnel)
 {
     bool new_signe;
     if (signe == '+')
@@ -113,7 +113,7 @@ void Channel::setMode(char signe, char mode, std::string optionnel = "")
             if (new_signe)
             {
                 if (optionnel.size() == 0)
-                    throw std::runtime_error("ERROR: Password required for +l mode\n");
+                    throw std::runtime_error("ERROR: Limite required for +l mode\n");
                 int limite = atoi(optionnel.c_str());
                 if (limite <= 0)
                     throw std::runtime_error("ERROR: Invalid limit value\n");
@@ -146,8 +146,10 @@ void Channel::remove_client(Client *client)
 {   
     std::vector<Client*>::iterator it = std::find(this->membre.begin(), this->membre.end(), client);
     std::vector<Client*>::iterator ite = std::find(this->inviter.begin(), this->inviter.end(), client);
+    client->channel = NULL;
     this->membre.erase(it);
-    this->inviter.erase(ite);
+    if(ite != this->inviter.end())
+        this->inviter.erase(ite);
     send(client->client_pollfd.fd, "You have been kicked from the channel.\n", 39, 0);
 }
 
