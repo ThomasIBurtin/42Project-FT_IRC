@@ -11,10 +11,10 @@ void Serveur::cmd_kick(const std::vector<std::string> input_split, Client* clien
     const std::string& user_to_kick = input_split[2];
 
     Channel* channel_find = find_channel_by_name(channel_name);
-    Client *client_find = find_client_in_vector(user_to_kick, channel_find->membre);
     if (!channel_find)
         throw std::runtime_error("ERROR: Channel does not exist.\n");
-    else if(!client_find)
+    Client *client_find = find_client_in_vector(user_to_kick, channel_find->membre);
+    if(!client_find)
         throw std::runtime_error("ERROR: User not found.\n");
     else if (channel_find->op != client)
         throw std::runtime_error("ERROR: You are not an operator of this channel.\n");

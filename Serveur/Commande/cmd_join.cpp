@@ -23,14 +23,14 @@ void Serveur::cmd_join(std::vector<std::string> input_split, Client* client)
         if (client->channel == channel_find)
             throw std::runtime_error("ERROR: you already are in this channel\n");
         if (channel_find->getMode('L') && channel_find->membre.size() >= channel_find->getLimite())
-            throw std::runtime_error("ERROR: The limit of the client is " + std::to_string(channel_find->getLimite()));
+            throw std::runtime_error("ERROR: The limit of the client is " + std::to_string(channel_find->getLimite()) + "\n");
         if(channel_find->getMode('I') && !(find_client_in_vector(client->getNickname(), channel_find->inviter)))
-            throw std::runtime_error("ERROR: You are not invite");
+            throw std::runtime_error("ERROR: You are not invite\n");
         if (channel_find->getMode('K') &&
             !(find_client_in_vector(client->getNickname(), channel_find->membre)) &&
             !(find_client_in_vector(client->getNickname(), channel_find->inviter)) &&
             (input_split.size() < 3 || input_split[2] != channel_find->getPassword()))
-            throw std::runtime_error("ERROR: Bad password");
+            throw std::runtime_error("ERROR: Bad password\n");
         channel_find->add_client(client);
     }
 }

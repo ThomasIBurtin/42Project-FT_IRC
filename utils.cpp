@@ -20,8 +20,9 @@ std::vector<std::string> split(const std::string &str)
 
     while (std::getline(tokenStream, token, ' '))
     {
+        token = trim(token);
         if (!token.empty())
-            tokens.push_back(trim(token));
+            tokens.push_back(token);
     }
     return tokens;
 }
