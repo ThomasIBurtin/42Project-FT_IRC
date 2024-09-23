@@ -15,7 +15,7 @@ Channel::Channel(std::string name) : _name(name)
 
 Channel::~Channel()
 {
-    
+
 }
 
 /*-------------------- Getter--Setter---------------------------*/
@@ -146,7 +146,8 @@ void Channel::remove_client(Client *client)
 {   
     std::vector<Client*>::iterator it = std::find(this->membre.begin(), this->membre.end(), client);
     std::vector<Client*>::iterator ite = std::find(this->inviter.begin(), this->inviter.end(), client);
-    client->channel = NULL;
+    if(client->channel == this)
+        client->channel = NULL;
     this->membre.erase(it);
     if(ite != this->inviter.end())
         this->inviter.erase(ite);

@@ -17,10 +17,10 @@ void Serveur::cmd_mode(std::vector<std::string> input_split, Client *client)
         throw std::runtime_error("ERROR: You are not an operator of this channel.\n");
     else
     {
-        if(input_split[3].size() == 0)
-            channel->setMode(signe, mode, "");
-        else
+        if(input_split.size() > 3)
             channel->setMode(signe, mode, input_split[3]);
+        else
+            channel->setMode(signe, mode, "");
         std::string message = channel->getName() + " change mode : " + mode + " with " + signe + "\n";
         send(client->client_pollfd.fd, message.c_str(), message.length(), 0);
     }
