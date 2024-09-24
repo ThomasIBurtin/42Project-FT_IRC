@@ -3,7 +3,7 @@
 
 #include "../Channel/channel.hpp"
 #include "../Client/client.hpp"
-#include "../utils.hpp"
+#include "../utils/utils.hpp"
 #include <iostream>
 #include <cstring>
 #include <sys/socket.h>
@@ -39,7 +39,6 @@ class Serveur
     void NewClientInServ();
     void ClientInput(Client *client, size_t &i);
     void parse_input(std::string input, Client *client);
-    Channel* find_channel_by_name(const std::string& name);
     std::vector<Client*> clients;
     std::vector<Channel*> channels;
     std::map<std::string, void (Serveur::*)(std::vector<std::string>, Client*)> command_map;

@@ -27,6 +27,16 @@ std::vector<std::string> split(const std::string &str)
     return tokens;
 }
 
+Channel* find_channel_by_name(const std::string& name, std::vector<Channel*> channels)
+{
+    for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
+    {
+        if ((*it)->getName() == name)
+            return *it;
+    }
+    return NULL;
+}
+
 Client* find_client_in_vector(const std::string& name, std::vector<Client*> clients)
 {
     for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end(); ++it)

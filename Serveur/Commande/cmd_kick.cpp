@@ -7,29 +7,17 @@ void Serveur::cmd_kick(const std::vector<std::string> input_split, Client* clien
     if (input_split.size() != 3)
         throw std::runtime_error("ERROR: Invalid parameters. Usage: /kick #channel user\n");
 
-    const std::string& channel_name = input_split[1];
-    const std::string& user_to_kick = input_split[2];
-
-    Channel* channel_find = find_channel_by_name(channel_name);
-    if (!channel_find)
+    Channel* channel_kick = find_channel_by_name(input_split[1], this->channels);
+    if (!channel_kick)
         throw std::runtime_error("ERROR: Channel does not exist.\n");
-    Client *client_find = find_client_in_vector(user_to_kick, channel_find->membre);
-    if(!client_find)
+
+    Client *client_to_kick = find_client_in_vector(input_split[2], channel_kick->membre);
+    if(!client_to_kick)
         throw std::runtime_error("ERROR: User not found.\n");
-    else if (channel_find->op != client)
+    else if (channel_kick->op != client)
         throw std::runtime_error("ERROR: You are not an operator of this channel.\n");
-    else if(channel_find->op == client_find)
+    else if(channel_kick->op == client_to_kick)
         throw std::runtime_error("ERROR: User cannot be kicked.\n");
     else
-        channel_find->remove_client(client_find);
-}
-
-Channel* Serveur::find_channel_by_name(const std::string& name)
-{
-    for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
-    {
-        if ((*it)->getName() == name)
-            return *it;
-    }
-    return NULL;
+        channel_kick->remove_client(client_to_kick);
 }

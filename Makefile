@@ -4,7 +4,7 @@ SRC = 	Channel/channel.cpp \
 		Client/client.cpp \
 		Serveur/serveur.cpp \
 		main.cpp \
-		utils.cpp \
+		utils/utils.cpp \
 		Serveur/commande/cmd_join.cpp \
 		Serveur/commande/cmd_kick.cpp \
 		Serveur/commande/cmd_nick.cpp \
