@@ -14,7 +14,7 @@ void Serveur::cmd_invite(std::vector<std::string> input_split, Client *client)
         throw std::runtime_error("ERROR: Channel does not exist.\n");
     else if (!client_inviter)
         throw std::runtime_error("ERROR: User not found.\n");
-    else if (channel_invite->op != client)
+    else if (!find_client_in_vector(client->getNickname(), channel_invite->oprator))
         throw std::runtime_error("ERROR: You are not an operator of this channel.\n");
     else if(find_client_in_vector(client_inviter_name, channel_invite->membre))
         throw std::runtime_error("ERROR: He is already in this channel.\n");

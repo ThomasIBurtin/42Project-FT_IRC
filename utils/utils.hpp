@@ -7,6 +7,9 @@
 #include "../Client/client.hpp"
 #include "../Serveur/serveur.hpp"
 
+class Channel;
+class Client;
+
 std::vector<std::string> split(const std::string &str);
 std::string trim(const std::string &str);
 Channel* find_channel_by_name(const std::string& name, std::vector<Channel*> channels);

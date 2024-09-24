@@ -4,7 +4,6 @@
 
 Channel::Channel(std::string name) : _name(name)
 {
-    this->op = NULL;
     this->_limite = 100;
     this->_I = false;
     this->_T = false;
@@ -69,7 +68,7 @@ void Channel::setTopic(std::string topic)
     this->_topic = topic;
 }
 
-void Channel::setMode(char signe, char mode, std::string optionnel)
+std::string Channel::setMode(char signe, char mode, std::string optionnel)
 {
     bool new_signe;
     if (signe == '+')
@@ -82,12 +81,22 @@ void Channel::setMode(char signe, char mode, std::string optionnel)
     switch (mode)
     {
         case 'i':
+        {
             this->_I = new_signe;
-            break;
+            if(new_signe)
+                return("Mode invitation only actif");
+            else
+                return("Mode invitation only inactif");
+        }
 
         case 't':
+        {
             this->_T = new_signe;
-            break;
+            if(new_signe)
+                return("Mode topic operator only actif");
+            else
+                return("Mode topic operator only inactif");
+        }
 
         case 'k':
         {
@@ -97,15 +106,42 @@ void Channel::setMode(char signe, char mode, std::string optionnel)
                 if (optionnel.size() == 0)
                     throw std::runtime_error("ERROR: Password required for +k mode\n");
                 this->_password = optionnel;
+                return("Password actif");
             }
             else
+            {
                 this->_password.clear();
-            break;
+                return("Password inactif");
+            }
         }
 
         case 'o':
+        {
+            if (optionnel.size() == 0)
+                throw std::runtime_error("ERROR: Client required for o mode\n");
+            Client *client = find_client_in_vector(optionnel, this->membre);
+            if(!client)
+                throw std::runtime_error("ERROR: Client are not in channel\n");
             this->_O = new_signe;
-            break;
+            if(new_signe)
+            {
+                if(find_client_in_vector(optionnel, this->oprator))
+                    throw std::runtime_error("ERROR: Client is already operator\n");
+                this->oprator.push_back(client);
+                return(client->getNickname() + " is now an operator of " + this->getName());
+            }
+            else
+            {
+                std::vector<Client*>::iterator it = std::find(this->oprator.begin(), this->oprator.end(), client);
+                if(it != this->oprator.end())
+                {
+                    this->oprator.erase(it);
+                    return(client->getNickname() + " is now a basic user of " + this->getName());
+                }
+                else
+                    throw std::runtime_error("ERROR: Client are not operator in channel\n");
+            }
+        }
 
         case 'l':
         {
@@ -118,10 +154,13 @@ void Channel::setMode(char signe, char mode, std::string optionnel)
                 if (limite <= 0)
                     throw std::runtime_error("ERROR: Invalid limit value\n");
                 this->_limite = limite;
+                return("the limite of " + this->getName() + " is " + std::to_string(limite));
             }
             else
+            {
                 this->_limite = 100;
-            break;
+                return("no limit in of people in " + this->getName());
+            }
         }
         default:
             throw std::runtime_error("ERROR: Mode can only be i, t, k, o, l\n");

@@ -1,8 +1,8 @@
 #ifndef SERVEUR_HPP
 #define SERVEUR_HPP
 
-#include "../Channel/channel.hpp"
 #include "../Client/client.hpp"
+#include "../Channel/channel.hpp"
 #include "../utils/utils.hpp"
 #include <iostream>
 #include <cstring>
@@ -15,6 +15,9 @@
 #include <fcntl.h>
 #include <vector>
 #include <map>
+
+class Client;
+class Channel;
 
 class Serveur
 {

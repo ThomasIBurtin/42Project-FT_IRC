@@ -12,15 +12,15 @@ void Serveur::cmd_mode(std::vector<std::string> input_split, Client *client)
     Channel *channel_mode = find_channel_by_name(input_split[1], this->channels);
     if(!channel_mode)
         throw std::runtime_error("ERROR: Channel does not exist.\n");
-    else if(channel_mode->op != client)
+    else if (!find_client_in_vector(client->getNickname(), channel_mode->oprator))
         throw std::runtime_error("ERROR: You are not an operator of this channel.\n");
     else
     {
+        std::string message;
         if(input_split.size() > 3)
-            channel_mode->setMode(signe, mode, input_split[3]);
+           message = channel_mode->setMode(signe, mode, input_split[3]);
         else
-            channel_mode->setMode(signe, mode, "");
-        std::string message = channel_mode->getName() + " change mode : " + mode + " with " + signe + "\n";
+           message = channel_mode->setMode(signe, mode, "");
         send(client->client_pollfd.fd, message.c_str(), message.length(), 0);
     }
 }

@@ -18,7 +18,7 @@ void Serveur::cmd_topic(const std::vector<std::string> input_split, Client* clie
         std::string message = "the topic of " + channel_topic->getName() + " is " + channel_topic->getTopic() + "\n";
         send(client->client_pollfd.fd, message.c_str(), message.size(), 0);
     }
-    else if ((channel_topic->op != client) && (channel_topic->getMode('T') == true))
+    else if (!find_client_in_vector(client->getNickname(), channel_topic->oprator) && (channel_topic->getMode('T') == true))
         throw std::runtime_error("ERROR: You need to be an operator for modify topic.\n");
     else
     {

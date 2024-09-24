@@ -13,9 +13,9 @@ void Serveur::cmd_join(std::vector<std::string> input_split, Client* client)
         Channel* new_channel = new Channel(input_split[1]);
         std::string message = "You created the " + new_channel->getName() + " channel.\n";
         send(client->client_pollfd.fd, message.c_str(), message.size(), 0);
-        new_channel->op = client;
-        this->channels.push_back(new_channel);
+        new_channel->oprator.push_back(client);
         new_channel->add_client(client);
+        this->channels.push_back(new_channel);
     }
     else
     {
