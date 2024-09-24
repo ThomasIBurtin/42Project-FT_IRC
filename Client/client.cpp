@@ -15,7 +15,8 @@ Client::Client(int fd, short events, short revents)
 
 Client::~Client()
 {
-
+    close(this->client_pollfd.fd);
+    std::cout << "Client déconnecté" << std::endl;
 }
 
 /*--------------------Getter--Setter----------------------------*/

@@ -46,3 +46,9 @@ Client* find_client_in_vector(const std::string& name, std::vector<Client*> clie
     }
     return NULL;
 }
+
+void signal_handler(int signum) 
+{
+    (void)signum;
+    server->clean_up();
+}

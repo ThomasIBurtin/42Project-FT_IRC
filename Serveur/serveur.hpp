@@ -42,6 +42,7 @@ class Serveur
     void NewClientInServ();
     void ClientInput(Client *client, size_t &i);
     void parse_input(std::string input, Client *client);
+    void clean_up();
     std::vector<Client*> clients;
     std::vector<Channel*> channels;
     std::map<std::string, void (Serveur::*)(std::vector<std::string>, Client*)> command_map;

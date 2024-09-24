@@ -1,12 +1,16 @@
 #include "Serveur/serveur.hpp"
 
+Serveur *server = nullptr;
 
 int main(int argc, char *argv[])
 {
-    if(argc != 3)
+    if (argc != 3)
     {
-        std::cout << "need port ans password" << std::endl;
+        std::cout << "Usage: " << argv[0] << " <port> <password>" << std::endl;
         return 1;
     }
-    Serveur serveur(atoi(argv[1]), argv[2]);
+    server = new Serveur(atoi(argv[1]), argv[2]);
+    std::signal(SIGINT, signal_handler);
+    server->create_serveur();
+    server->manage_client();
 }

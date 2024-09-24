@@ -9,10 +9,13 @@
 
 class Channel;
 class Client;
+class Serveur;
 
 std::vector<std::string> split(const std::string &str);
 std::string trim(const std::string &str);
 Channel* find_channel_by_name(const std::string& name, std::vector<Channel*> channels);
 Client* find_client_in_vector(const std::string& name, std::vector<Client*> clients);
+void signal_handler(int signum);
+extern Serveur* server;
 
 #endif

@@ -14,7 +14,7 @@ Channel::Channel(std::string name) : _name(name)
 
 Channel::~Channel()
 {
-
+    std::cout << "Channel fermé." << std::endl;
 }
 
 /*-------------------- Getter--Setter---------------------------*/
@@ -84,18 +84,18 @@ std::string Channel::setMode(char signe, char mode, std::string optionnel)
         {
             this->_I = new_signe;
             if(new_signe)
-                return("Mode invitation only actif");
+                return("Mode invitation only actif\n");
             else
-                return("Mode invitation only inactif");
+                return("Mode invitation only inactif\n");
         }
 
         case 't':
         {
             this->_T = new_signe;
             if(new_signe)
-                return("Mode topic operator only actif");
+                return("Mode topic operator only actif\n");
             else
-                return("Mode topic operator only inactif");
+                return("Mode topic operator only inactif\n");
         }
 
         case 'k':
@@ -106,12 +106,12 @@ std::string Channel::setMode(char signe, char mode, std::string optionnel)
                 if (optionnel.size() == 0)
                     throw std::runtime_error("ERROR: Password required for +k mode\n");
                 this->_password = optionnel;
-                return("Password actif");
+                return("Password actif for this channel\n");
             }
             else
             {
                 this->_password.clear();
-                return("Password inactif");
+                return("Password inactif for this channel\n");
             }
         }
 
@@ -128,7 +128,7 @@ std::string Channel::setMode(char signe, char mode, std::string optionnel)
                 if(find_client_in_vector(optionnel, this->oprator))
                     throw std::runtime_error("ERROR: Client is already operator\n");
                 this->oprator.push_back(client);
-                return(client->getNickname() + " is now an operator of " + this->getName());
+                return(client->getNickname() + " is now an operator of " + this->getName() + "\n");
             }
             else
             {
@@ -136,7 +136,7 @@ std::string Channel::setMode(char signe, char mode, std::string optionnel)
                 if(it != this->oprator.end())
                 {
                     this->oprator.erase(it);
-                    return(client->getNickname() + " is now a basic user of " + this->getName());
+                    return(client->getNickname() + " is now a basic user of " + this->getName() + "\n");
                 }
                 else
                     throw std::runtime_error("ERROR: Client are not operator in channel\n");
@@ -154,12 +154,12 @@ std::string Channel::setMode(char signe, char mode, std::string optionnel)
                 if (limite <= 0)
                     throw std::runtime_error("ERROR: Invalid limit value\n");
                 this->_limite = limite;
-                return("the limite of " + this->getName() + " is " + std::to_string(limite));
+                return("the limite of " + this->getName() + " is " + std::to_string(limite) + "\n");
             }
             else
             {
                 this->_limite = 100;
-                return("no limit in of people in " + this->getName());
+                return("no limit in of people in " + this->getName() + "\n");
             }
         }
         default:
@@ -185,12 +185,15 @@ void Channel::remove_client(Client *client)
 {   
     std::vector<Client*>::iterator it = std::find(this->membre.begin(), this->membre.end(), client);
     std::vector<Client*>::iterator ite = std::find(this->inviter.begin(), this->inviter.end(), client);
+    std::vector<Client*>::iterator itee = std::find(this->oprator.begin(), this->oprator.end(), client);
     if(client->channel == this)
         client->channel = NULL;
-    this->membre.erase(it);
+    if(it != this->membre.end())
+        this->membre.erase(it);
     if(ite != this->inviter.end())
         this->inviter.erase(ite);
-    send(client->client_pollfd.fd, "You have been kicked from the channel.\n", 39, 0);
+    if(itee != this->oprator.end())
+        this->oprator.erase(itee);
 }
 
 void Channel::add_client(Client* client)

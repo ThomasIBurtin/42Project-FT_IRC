@@ -13,15 +13,13 @@ Serveur::Serveur(int port, std::string password) : _password(password), _port(po
     command_map["/topic"] = &Serveur::cmd_topic;
     command_map["/mode"] = &Serveur::cmd_mode;
     command_map["/invite"] = &Serveur::cmd_invite;
-
-    this->create_serveur();
-    this->manage_client();
 }
 
 Serveur::~Serveur()
 {
     close(this->_server_socket);
     std::cout << "Serveur fermé." << std::endl;
+    exit(0);
 }
 
 /*--------------------Fonctions----------------------------------*/
@@ -95,10 +93,14 @@ void Serveur::ClientInput(Client *client, size_t &i)
         this->parse_input(std::string(input), client);
     else if (valread == 0)
     {
-        std::cout << "Client déconnecté " << std::endl;
-        close(client->client_pollfd.fd);
+        for(std::vector<Channel*>::iterator it = channels.begin(); it != channels.end(); ++it)
+        {
+            if(find_client_in_vector(client->getNickname(), (*it)->membre) || find_client_in_vector(client->getNickname(), (*it)->inviter))
+                (*it)->remove_client(client);
+        }
         clients.erase(clients.begin() + i);
         i--;
+        delete client;
     }
 }
 
@@ -120,3 +122,26 @@ void Serveur::parse_input(std::string input, Client *client)
         send(client->client_pollfd.fd, e.what(), strlen(e.what()), 0);
     }
 }
+
+void Serveur::clean_up()
+{
+    if (!clients.empty())
+    {
+        for (std::vector<Client*>::iterator it = clients.begin(); it != clients.end();)
+        {
+            delete *it;            
+            it = clients.erase(it);
+        }
+    }
+
+    if (!channels.empty())
+    {
+        for (std::vector<Channel*>::iterator it = channels.begin(); it != channels.end();)
+        {
+            delete *it;              
+            it = channels.erase(it);
+        }
+    }
+    delete this;
+}
+
